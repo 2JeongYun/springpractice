@@ -16,6 +16,10 @@ cache:
 # 수행 될 명령어
 script: "./gradlew clean build"
 
+# 인스톨 전, gradlew 실행 권한 추가
+before_install:
+  - chmod +x gradlew
+
 # deploy 명령어가 실행되기 전에 수행
 before_deploy:
   # 폴더 포함 현재 위치의 모든 파일을 [프로젝트명]으로 압축한다(CodeDeploy는 jar파일 인식 불가 -> zip)
