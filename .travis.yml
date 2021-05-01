@@ -27,7 +27,7 @@ before_deploy:
   # Travis CI가 실행중인 위치에 deploy 디렉토리 생성
   - mkdir -p deploy
   # [프로젝트명].zip 파일을 deploy 폴더로 이동
-  - mv spring-practice.zip deploy/springpractice.zip
+  - mv springpractice.zip deploy/springpractice.zip
 
 deploy:
   - provider: s3
