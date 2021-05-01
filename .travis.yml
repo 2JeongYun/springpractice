@@ -1,0 +1,43 @@
+language: java
+jdk:
+  - openjdk11
+
+# 어느 브랜치가 푸시될 때 수행할 것인가
+branches:
+  only:
+    - master
+
+# Travis CI 서버의 Home
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+    - '$HOME/.gradle'
+
+# 수행 될 명령어
+script: "./gradlew clean build"
+
+# deploy 명령어가 실행되기 전에 수행
+before_deploy:
+  # 폴더 포함 현재 위치의 모든 파일을 [프로젝트명]으로 압축한다(CodeDeploy는 jar파일 인식 불가 -> zip)
+  - zip -r springpractice *
+  # Travis CI가 실행중인 위치에 deploy 디렉토리 생성
+  - mkdir -p deploy
+  # [프로젝트명].zip 파일을 deploy 폴더로 이동
+  - mv spring-practice.zip deploy/springpractice.zip
+
+deploy:
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: spring-practice
+    region: ap-northeast-2
+    skip_cleanup: true
+    acl: private # zip 파일 접근을 private으로
+    local_dir: deploy # before_deploy에서 생성한 디렉토리, 해당 위치의 파일만 S3로 전송한다.
+    wait-until-deployed: true
+
+# CI 실행 완료 시 메일로 알람
+notifications:
+  email:
+    recipients:
+      - leejeongyun828@gmail.com
